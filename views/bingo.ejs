@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title><%= show %> – Bullshit Bingo</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1><%= show %> – Bullshit Bingo</h1>
+  <a href="/">Zurück zur Auswahl</a>
+
+  <div class="grid">
+    <% phrases.forEach((phrase, i) => { %>
+      <div class="cell" onclick="this.classList.toggle('marked')">
+        <%= phrase %>
+      </div>
+    <% }) %>
+  </div>
+</body>
+</html>
