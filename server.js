@@ -18,9 +18,11 @@ const phrasesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'phr
 // Hilfsfunktion: zufällige Auswahl
 function pickRandomPhrases(show, count = 25) {
   const phrases = phrasesData[show];
-  if (!phrases || phrases.length < count) {
-    throw new Error(`Nicht genug Phrasen für Show: ${show}`);
-  }
+  if (!phrases) return [];
+
+  const shuffled = phrases.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, Math.min(count, phrases.length)); // statt harter Fehler
+}
 
   // Shuffle + Slice
   const shuffled = phrases.sort(() => 0.5 - Math.random());
