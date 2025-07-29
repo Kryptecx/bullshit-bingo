@@ -1,28 +1,49 @@
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
+
 const app = express();
-const PORT = process.env.PORT || 3000;
-const shows = require('./data/shows.json');
 
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
+app.set('views', path.join(__dirname, 'views'));
 
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Shows laden
+const shows = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'shows.json'), 'utf-8'));
+
+// Phrasen pro Show laden
+const phrasesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'phrases.json'), 'utf-8'));
+
+// Hilfsfunktion: zufällige Auswahl
+function pickRandomPhrases(show, count = 25) {
+  const phrases = phrasesData[show];
+  if (!phrases || phrases.length < count) {
+    throw new Error(`Nicht genug Phrasen für Show: ${show}`);
+  }
+
+  // Shuffle + Slice
+  const shuffled = phrases.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
+}
+
+// Startseite: Show auswählen
 app.get('/', (req, res) => {
-  res.render('index', { shows: Object.keys(shows) });
+  res.render('index', { shows });
 });
 
-app.get('/api/bingo/:show', (req, res) => {
+// Bingo-Seite mit zufälligem Feld
+app.get('/play/:show', (req, res) => {
   const show = req.params.show;
-  const phrases = shows[show];
+  if (!phrasesData[show]) {
+    return res.status(404).send("Show nicht gefunden");
+  }
 
-  if (!phrases) return res.status(404).send('Show not found');
-
-  const selected = phrases
-    .sort(() => 0.5 - Math.random())
-    .slice(0, 25);
-
-  res.json(selected);
+  const selectedPhrases = pickRandomPhrases(show);
+  res.render('bingo', { show, phrases: selectedPhrases });
 });
 
-app.listen(PORT, () => {
-  console.log(`Bullshit Bingo läuft auf Port ${PORT}`);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server läuft auf Port ${port}`);
 });
