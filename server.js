@@ -22,12 +22,12 @@ function pickRandomPhrases(show, count = 25) {
 
   const shuffled = phrases.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, Math.min(count, phrases.length)); // statt harter Fehler
-}
+}      
 
   // Shuffle + Slice
   const shuffled = phrases.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
-}
+
 
 // Startseite: Show auswählen
 app.get('/', (req, res) => {
