@@ -25,20 +25,29 @@ button:hover {
 .grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 5px;
-  max-width: 600px;
+  gap: 6px;
+  max-width: 90vmin;
   margin: 20px auto;
+  aspect-ratio: 1 / 1; /* macht das ganze Grid quadratisch */
 }
 
 .cell {
-  padding: 10px;
-  border: 1px solid #555;
   background-color: #222;
   color: #eee;
+  border: 1px solid #555;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  text-align: center;
+  font-size: 0.9rem;
   cursor: pointer;
-  border-radius: 4px;
   user-select: none;
   transition: background-color 0.3s ease;
+  aspect-ratio: 1 / 1; /* macht jedes Feld quadratisch */
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .cell.marked {
