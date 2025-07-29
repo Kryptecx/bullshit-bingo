@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Bullshit Bingo</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>Bullshit Bingo</h1>
+  <p>Wähle eine Show:</p>
+  <div id="shows">
+    <% shows.forEach(show => { %>
+      <button onclick="loadBingo('<%= show %>')"><%= show %></button>
+    <% }) %>
+  </div>
+
+  <div id="bingo-board" class="grid"></div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
