@@ -60,6 +60,48 @@
       z-index: 1;
       padding: 10px;
     }
+
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    }
+
+    .modal-content button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .confirm-btn {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .cancel-btn {
+      background-color: #888;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -70,17 +112,36 @@
     <% shows.forEach(show => { 
          const image = `/images/${show.toLowerCase().replace(/\s+/g, '-')}.jpg`;
     %>
-      <div class="card" style="background-image: url('<%= image %>')" onclick="confirmStart('<%= show %>')">
+      <div class="card" style="background-image: url('<%= image %>')" onclick="openModal('<%= show %>')">
         <span><%= show %></span>
       </div>
     <% }) %>
   </div>
 
+  <!-- Modal -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-content">
+      <p id="modalText">Spiel starten?</p>
+      <button class="confirm-btn" onclick="startGame()">Ja</button>
+      <button class="cancel-btn" onclick="closeModal()">Abbrechen</button>
+    </div>
+  </div>
+
   <script>
-    function confirmStart(show) {
-      if (confirm(`Willst du das Bingo-Spiel für "${show}" starten?`)) {
-        window.location.href = `/play/${encodeURIComponent(show)}`;
-      }
+    let selectedShow = '';
+
+    function openModal(show) {
+      selectedShow = show;
+      document.getElementById('modalText').textContent = `Spiel starten für "${show}"?`;
+      document.getElementById('confirmModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('confirmModal').style.display = 'none';
+    }
+
+    function startGame() {
+      window.location.href = `/play/${encodeURIComponent(selectedShow)}`;
     }
   </script>
 </body>
