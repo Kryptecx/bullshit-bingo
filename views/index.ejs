@@ -6,16 +6,25 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <h1>Bullshit Bingo</h1>
+  <h1>Bingo</h1>
   <p>Wähle eine Show:</p>
-  <div id="shows">
-    <% shows.forEach(show => { %>
-      <button onclick="loadBingo('<%= show %>')"><%= show %></button>
-    <% }) %>
-  </div>
 
-  <div id="bingo-board" class="grid"></div>
+<div class="shows">
+  <% shows.forEach(show => { %>
+    <div class="show-card" onclick="confirmStart('<%= show %>')">
+      <%= show %>
+    </div>
+  <% }) %>
+</div>
 
-  <script src="/script.js"></script>
+<script>
+  function confirmStart(show) {
+    const confirmMsg = `Willst du das Bingo-Spiel für "${show}" starten?`;
+    if (confirm(confirmMsg)) {
+      window.location.href = `/play/${encodeURIComponent(show)}`;
+    }
+  }
+</script>
+
 </body>
 </html>
