@@ -3,28 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <title>Bullshit Bingo</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 40px;
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 40px;
+    }
+
+    .card {
+      width: 200px;
+      height: 200px;
+      border-radius: 20px;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+    }
+
+    .card span {
+      position: relative;
+      z-index: 1;
+      padding: 10px;
+    }
+  </style>
 </head>
 <body>
   <h1>Bingo</h1>
   <p>Wähle eine Show:</p>
 
-<div class="shows">
-  <% shows.forEach(show => { %>
-    <div class="show-card" onclick="confirmStart('<%= show %>')">
-      <%= show %>
-    </div>
-  <% }) %>
-</div>
+  <div class="card-container">
+    <% shows.forEach(show => { 
+         const image = `/images/${show.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+    %>
+      <div class="card" style="background-image: url('<%= image %>')" onclick="confirmStart('<%= show %>')">
+        <span><%= show %></span>
+      </div>
+    <% }) %>
+  </div>
 
-<script>
-  function confirmStart(show) {
-    const confirmMsg = `Willst du das Bingo-Spiel für "${show}" starten?`;
-    if (confirm(confirmMsg)) {
-      window.location.href = `/play/${encodeURIComponent(show)}`;
+  <script>
+    function confirmStart(show) {
+      if (confirm(`Willst du das Bingo-Spiel für "${show}" starten?`)) {
+        window.location.href = `/play/${encodeURIComponent(show)}`;
+      }
     }
-  }
-</script>
-
+  </script>
 </body>
 </html>
