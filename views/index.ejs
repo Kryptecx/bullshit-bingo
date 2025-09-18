@@ -175,11 +175,16 @@
     }
   </script>
 
-<!-- Neuer Bereich für die Flaggen-Galerie -->
-<section id="flags-gallery" style="margin-top:40px;">
+<!-- Link zum Flaggen-Ordner -->
+<div style="margin-top:20px;">
+  <a href="#" id="show-flags" style="padding:10px 16px; background:#0f172a; color:#fff; border-radius:8px; text-decoration:none;">Flaggen ansehen</a>
+</div>
+
+<!-- Galerie-Bereich -->
+<section id="flags-gallery" style="display:none; margin-top:20px;">
   <h2>Flaggen</h2>
   <div id="flags-msg" class="muted" style="margin-top:8px"></div>
-  <div id="flags-grid" class="grid" style="
+  <div id="flags-grid" style="
       display:grid;
       grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
       gap:12px;
@@ -188,14 +193,23 @@
 </section>
 
 <script>
+// Klick auf den Link zeigt die Galerie
+document.getElementById('show-flags').addEventListener('click', e => {
+  e.preventDefault();
+  const gallery = document.getElementById('flags-gallery');
+  gallery.style.display = gallery.style.display === 'none' ? 'block' : 'none';
+  loadFlags();
+});
+
+// Galerie laden
 async function loadFlags() {
   const gallery = document.getElementById('flags-grid');
   const msg = document.getElementById('flags-msg');
   gallery.innerHTML = '';
   msg.textContent = 'Lade...';
 
-  const owner = 'Kryptecx';
-  const repo = 'bullshit-bingo';
+  const owner = 'DEIN-USERNAME';
+  const repo = 'DEIN-REPO';
   const path = 'images/flags';
   const branch = 'main';
   const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
@@ -243,10 +257,8 @@ async function loadFlags() {
     msg.textContent = err.message;
   }
 }
-
-// Automatisch laden beim Seitenaufruf
-window.addEventListener('DOMContentLoaded', loadFlags);
 </script>
+
 
 <footer style="margin-top: 40px; color: #555; font-size: 0.9rem;">
   <p>Powered by <strong>QW</strong></p>
