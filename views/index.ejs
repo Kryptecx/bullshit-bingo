@@ -175,6 +175,79 @@
     }
   </script>
 
+<!-- Neuer Bereich für die Flaggen-Galerie -->
+<section id="flags-gallery" style="margin-top:40px;">
+  <h2>Flaggen</h2>
+  <div id="flags-msg" class="muted" style="margin-top:8px"></div>
+  <div id="flags-grid" class="grid" style="
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+      gap:12px;
+      margin-top:12px;">
+  </div>
+</section>
+
+<script>
+async function loadFlags() {
+  const gallery = document.getElementById('flags-grid');
+  const msg = document.getElementById('flags-msg');
+  gallery.innerHTML = '';
+  msg.textContent = 'Lade...';
+
+  const owner = 'DEIN-USERNAME';
+  const repo = 'DEIN-REPO';
+  const path = 'images/flags';
+  const branch = 'main';
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+
+  try {
+    const res = await fetch(apiUrl);
+    if (!res.ok) throw new Error(`Fehler: ${res.status} ${res.statusText}`);
+    const data = await res.json();
+    const images = data
+      .filter(f => f.type === 'file' && /\.(png|jpg|jpeg|gif)$/i.test(f.name))
+      .map(f => ({ name: f.name, url: f.download_url }))
+      .sort((a,b)=> a.name.localeCompare(b.name));
+
+    if(images.length === 0){ msg.textContent = 'Keine Flaggen gefunden.'; return; }
+    msg.textContent = `${images.length} Flagge(n) gefunden.`;
+
+    images.forEach(img => {
+      const tile = document.createElement('div');
+      tile.style.textAlign = 'center';
+      tile.style.padding = '6px';
+      tile.style.background = 'rgba(255,255,255,0.05)';
+      tile.style.borderRadius = '8px';
+
+      const imageEl = document.createElement('img');
+      imageEl.src = img.url;
+      imageEl.alt = img.name;
+      imageEl.loading = 'lazy';
+      imageEl.style.width = '100%';
+      imageEl.style.height = '100px';
+      imageEl.style.objectFit = 'contain';
+      imageEl.style.borderRadius = '4px';
+
+      const caption = document.createElement('div');
+      caption.textContent = img.name.replace(/\.[^.]+$/, '').toUpperCase();
+      caption.style.marginTop = '6px';
+      caption.style.fontWeight = '700';
+      caption.style.fontSize = '0.9em';
+
+      tile.appendChild(imageEl);
+      tile.appendChild(caption);
+      gallery.appendChild(tile);
+    });
+
+  } catch(err) {
+    msg.textContent = err.message;
+  }
+}
+
+// Automatisch laden beim Seitenaufruf
+window.addEventListener('DOMContentLoaded', loadFlags);
+</script>
+
 <footer style="margin-top: 40px; color: #555; font-size: 0.9rem;">
   <p>Powered by <strong>QW</strong></p>
 </footer>
